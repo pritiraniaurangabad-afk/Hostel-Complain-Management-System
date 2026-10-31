@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}Admin Dashboard · HostelCare{% endblock %}
+{% block content %}
+<div class="page-heading"><div><span class="eyebrow">ADMINISTRATION</span><h1>Complaint overview</h1><p class="muted">Review requests and assign them to the right staff member.</p></div></div>
+<div class="stats-grid">
+  <div class="stat-card"><span>Total complaints</span><strong>{{ stats.total or 0 }}</strong></div>
+  <div class="stat-card"><span>Awaiting assignment</span><strong>{{ stats.submitted or 0 }}</strong></div>
+  <div class="stat-card"><span>Active work</span><strong>{{ stats.active or 0 }}</strong></div>
+  <div class="stat-card"><span>Completed</span><strong>{{ stats.completed or 0 }}</strong></div>
+</div>
+<div class="toolbar">
+  <h2>All complaints</h2>
+  <form method="get" class="filter-form"><label for="status">Filter</label><select id="status" name="status" onchange="this.form.submit()"><option value="">All statuses</option>{% for s in ['Submitted','Assigned','In Progress','Completed'] %}<option value="{{ s }}" {% if status_filter==s %}selected{% endif %}>{{ s }}</option>{% endfor %}</select></form>
+</div>
+<div class="panel table-panel">
+{% if complaints %}
+<div class="table-scroll"><table><thead><tr><th>Complaint</th><th>Student</th><th>Status</th><th>Assigned staff</th><th>Assign staff</th></tr></thead><tbody>
+{% for c in complaints %}
+<tr>
+<td><a class="table-title" href="{{ url_for('complaint_detail', complaint_id=c.id) }}">#{{ c.id }} · {{ c.title }}</a><small>{{ c.category }} · {{ c.location }}</small></td>
+<td>{{ c.student_name }}</td>
+<td><span class="status status-{{ c.status|lower|replace(' ', '-') }}">{{ c.status }}</span></td>
+<td>{{ c.staff_name or 'Not assigned' }}</td>
+<td><form class="assign-form" method="post" action="{{ url_for('assign_complaint', complaint_id=c.id) }}"><select name="staff_id" required aria-label="Select staff for complaint {{ c.id }}"><option value="">Select staff</option>{% for staff in staff_members %}<option value="{{ staff.id }}" {% if c.assigned_staff_id==staff.id %}selected{% endif %}>{{ staff.full_name }}</option>{% endfor %}</select><button class="btn btn-small btn-primary" type="submit">Assign</button></form></td>
+</tr>
+{% endfor %}
+</tbody></table></div>
+{% else %}<div class="empty-inline">No complaints match this filter.</div>{% endif %}
+</div>
+{% endblock %}

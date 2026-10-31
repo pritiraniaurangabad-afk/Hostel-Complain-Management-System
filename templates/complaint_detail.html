@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}Complaint #{{ complaint.id }} · HostelCare{% endblock %}
+{% block content %}
+<a class="back-link" href="{% if session.role=='student' %}{{ url_for('student_dashboard') }}{% elif session.role=='admin' %}{{ url_for('admin_dashboard') }}{% else %}{{ url_for('staff_dashboard') }}{% endif %}">← Back to dashboard</a>
+<div class="detail-layout">
+  <section>
+    <div class="page-heading compact"><div><span class="eyebrow">COMPLAINT #{{ complaint.id }}</span><h1>{{ complaint.title }}</h1><p class="muted">{{ complaint.category }} · {{ complaint.location }}</p></div><span class="status status-large status-{{ complaint.status|lower|replace(' ', '-') }}">{{ complaint.status }}</span></div>
+    <div class="panel detail-panel">
+      <h2>Problem description</h2><p class="preserve">{{ complaint.description }}</p>
+      <div class="detail-meta"><div><span>Submitted by</span><strong>{{ complaint.student_name }}</strong></div><div><span>Assigned staff</span><strong>{{ complaint.staff_name or 'Not assigned yet' }}</strong></div><div><span>Submitted</span><strong>{{ complaint.created_at.strftime('%d %b %Y, %I:%M %p') if complaint.created_at else '' }}</strong></div><div><span>Last updated</span><strong>{{ complaint.updated_at.strftime('%d %b %Y, %I:%M %p') if complaint.updated_at else '' }}</strong></div></div>
+      {% if complaint.staff_response %}<div class="response-box"><strong>Latest staff response</strong><p class="preserve">{{ complaint.staff_response }}</p></div>{% endif %}
+    </div>
+    {% if session.role=='staff' and complaint.status!='Completed' %}
+    <form class="panel form-panel" method="post" action="{{ url_for('update_status', complaint_id=complaint.id) }}">
+      <h2>Update work status</h2>
+      <label for="status">New status</label><select id="status" name="status" required><option value="In Progress" {% if complaint.status=='In Progress' %}selected{% endif %}>In Progress</option><option value="Completed">Completed</option></select>
+      <label for="response">Response / work notes</label><textarea id="response" name="response" rows="3" placeholder="Explain what you checked, fixed, or completed..."></textarea>
+      <button class="btn btn-primary" type="submit">Save update</button>
+    </form>
+    {% endif %}
+    <div class="panel timeline-panel"><h2>Progress and responses</h2>
+      {% if updates %}<div class="timeline">{% for update in updates %}<div class="timeline-item"><span class="timeline-dot"></span><div><div class="timeline-heading"><strong>{{ update.author_name }}</strong><span class="muted tiny">{{ update.author_role|title }} · {{ update.created_at.strftime('%d %b %Y, %I:%M %p') if update.created_at else '' }}</span></div><p class="preserve">{{ update.message }}</p></div></div>{% endfor %}</div>{% else %}<p class="muted">No updates yet.</p>{% endif %}
+    </div>
+  </section>
+  {% if session.role=='admin' %}
+  <aside class="panel assign-panel"><span class="eyebrow">ADMIN ACTION</span><h2>Assign complaint</h2><p class="muted">The selected staff member will see this complaint in their workspace.</p>
+    <form method="post" action="{{ url_for('assign_complaint', complaint_id=complaint.id) }}"><label for="staff_id">Staff member</label><select id="staff_id" name="staff_id" required><option value="">Choose staff</option>{% for staff in staff_members %}<option value="{{ staff.id }}" {% if complaint.assigned_staff_id==staff.id %}selected{% endif %}>{{ staff.full_name }}</option>{% endfor %}</select><button class="btn btn-primary full-width" type="submit">Assign / reassign</button></form>
+  </aside>
+  {% endif %}
+</div>
+{% endblock %}

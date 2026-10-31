@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Login · HostelCare{% endblock %}
+{% block content %}
+<section class="login-wrap">
+  <div class="login-intro">
+    <span class="eyebrow">HOSTEL SUPPORT PORTAL</span>
+    <h1>A better way to get hostel issues resolved.</h1>
+    <p>Submit a complaint, follow its progress, and see updates from the maintenance team in one place.</p>
+    <div class="feature-pills"><span>Track progress</span><span>Staff responses</span><span>Clear status</span></div>
+  </div>
+  <form class="panel login-card" method="post">
+    <h2>Welcome back</h2>
+    <p class="muted">Sign in with your assigned account.</p>
+    <label for="username">Username</label>
+    <input id="username" name="username" required autocomplete="username" autofocus>
+    <label for="password">Password</label>
+    <input id="password" name="password" type="password" required autocomplete="current-password">
+    <button class="btn btn-primary full-width" type="submit">Log in</button>
+    <p class="tiny muted">Choose your role automatically through your account. Demo accounts are listed in README.md.</p>
+  </form>
+</section>
+{% endblock %}

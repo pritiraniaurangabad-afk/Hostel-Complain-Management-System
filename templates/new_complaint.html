@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}New Complaint · HostelCare{% endblock %}
+{% block content %}
+<div class="narrow">
+  <a class="back-link" href="{{ url_for('student_dashboard') }}">← Back to dashboard</a>
+  <div class="page-heading compact"><div><span class="eyebrow">STUDENT PORTAL</span><h1>Submit a complaint</h1><p class="muted">Give enough detail so the right staff member can help.</p></div></div>
+  <form class="panel form-panel" method="post">
+    <label for="title">Complaint title</label>
+    <input id="title" name="title" maxlength="150" placeholder="e.g. Water leakage in bathroom" required>
+    <div class="form-row">
+      <div><label for="category">Category</label><select id="category" name="category" required><option value="">Select category</option>{% for cat in ['Electrical','Plumbing','Cleaning','Furniture','Internet','Security','Other'] %}<option>{{ cat }}</option>{% endfor %}</select></div>
+      <div><label for="location">Hostel / room location</label><input id="location" name="location" maxlength="120" placeholder="e.g. Block B, Room 204" required></div>
+    </div>
+    <label for="description">Describe the problem</label>
+    <textarea id="description" name="description" rows="6" placeholder="Explain what happened and where..." required></textarea>
+    <div class="form-actions"><a class="btn btn-outline" href="{{ url_for('student_dashboard') }}">Cancel</a><button class="btn btn-primary" type="submit">Submit complaint</button></div>
+  </form>
+</div>
+{% endblock %}

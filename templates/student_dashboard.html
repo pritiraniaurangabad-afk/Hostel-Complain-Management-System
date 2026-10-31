@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}Student Dashboard · HostelCare{% endblock %}
+{% block content %}
+<div class="page-heading">
+  <div><span class="eyebrow">STUDENT PORTAL</span><h1>Your complaints</h1><p class="muted">Follow each issue from submission to completion.</p></div>
+  <a class="btn btn-primary" href="{{ url_for('new_complaint') }}">＋ New complaint</a>
+</div>
+{% if complaints %}
+<div class="complaint-grid">
+{% for c in complaints %}
+  <article class="panel complaint-card">
+    <div class="card-top"><span class="complaint-id">#{{ c.id }} · {{ c.category }}</span><span class="status status-{{ c.status|lower|replace(' ', '-') }}">{{ c.status }}</span></div>
+    <h3><a href="{{ url_for('complaint_detail', complaint_id=c.id) }}">{{ c.title }}</a></h3>
+    <p class="muted">{{ c.location }}</p>
+    <p class="clamp">{{ c.description }}</p>
+    <div class="card-bottom"><span class="muted tiny">Updated {{ c.updated_at.strftime('%d %b %Y, %I:%M %p') if c.updated_at else '' }}</span><a href="{{ url_for('complaint_detail', complaint_id=c.id) }}">View details →</a></div>
+  </article>
+{% endfor %}
+</div>
+{% else %}
+<div class="panel empty-state"><div class="empty-icon">✓</div><h2>No complaints yet</h2><p class="muted">If something needs attention in your hostel, submit a complaint here.</p><a class="btn btn-primary" href="{{ url_for('new_complaint') }}">Submit your first complaint</a></div>
+{% endif %}
+{% endblock %}

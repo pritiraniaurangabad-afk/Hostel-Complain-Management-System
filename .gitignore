@@ -1,0 +1,20 @@
+# Database passwords and secrets
+.env
+.env.*
+!.env.example
+
+# Python temporary files
+__pycache__/
+*.pyc
+*.pyo
+
+# Virtual environments
+venv/
+.venv/
+
+# VS Code settings
+.vscode/
+
+# Operating system files
+.DS_Store
+Thumbs.db
