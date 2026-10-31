@@ -1,3 +1,6 @@
 Flask>=3.0,<4.0
 mysql-connector-python>=9.0,<10.0
 python-dotenv>=1.0,<2.0
+git add requirements.txt
+git commit -m "Add gunicorn for deployment"
+git push
